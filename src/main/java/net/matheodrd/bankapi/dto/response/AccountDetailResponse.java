@@ -16,7 +16,8 @@ public record AccountDetailResponse(
         AccountStatus status,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        Long totalTransactions,  // Calculated stats
+        // Calculated stats
+        Long totalTransactions,
         BigDecimal totalDebits,
         BigDecimal totalCredits
 ) {
