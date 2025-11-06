@@ -1,9 +1,11 @@
 package net.matheodrd.bankapi.mapper;
 
 import net.matheodrd.bankapi.dto.request.CreateAccountRequest;
+import net.matheodrd.bankapi.dto.response.AccountDetailResponse;
 import net.matheodrd.bankapi.dto.response.AccountResponse;
 import net.matheodrd.bankapi.model.Account;
 import net.matheodrd.bankapi.model.enums.AccountStatus;
+import net.matheodrd.bankapi.repository.projection.AccountDetailProjection;
 import org.mapstruct.*;
 
 import java.util.List;
@@ -18,6 +20,8 @@ public interface AccountMapper {
     AccountResponse toResponse(Account account);
 
     List<AccountResponse> toResponseList(List<Account> accounts);
+
+    AccountDetailResponse toDetailResponse(AccountDetailProjection projection);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "accountNumber", ignore = true)
