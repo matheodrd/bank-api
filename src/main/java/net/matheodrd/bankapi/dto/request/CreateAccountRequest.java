@@ -17,7 +17,7 @@ public record CreateAccountRequest(
         @DecimalMin(value = "0.0")
         BigDecimal initialBalance,
 
-        @NotBlank
+        @NotNull(message = "Currency is required")
         Currency currency
 ) {
 }
