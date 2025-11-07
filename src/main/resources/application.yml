@@ -14,3 +14,10 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
     validate-on-migrate: true
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui
+    operations-sorter: method
