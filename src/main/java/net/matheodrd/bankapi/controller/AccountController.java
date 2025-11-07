@@ -1,5 +1,12 @@
 package net.matheodrd.bankapi.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,17 +32,26 @@ import java.util.UUID;
 @RequestMapping("/api/v1/accounts")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Accounts", description = "Account management endpoints")
 public class AccountController {
 
     private final AccountService accountService;
     private final TransactionService transactionService;
 
     @GetMapping
+    @Operation(summary = "Get all accounts", description = "Retrieve a paginated list of all accounts")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved accounts"),
+            @ApiResponse(responseCode = "400", description = "Invalid pagination parameters")
+    })
     public ResponseEntity<PageResponse<AccountResponse>> getAllAccounts(
+            @Parameter(description = "Page number (0-based)")
             @RequestParam(defaultValue = "0") int page,
 
+            @Parameter(description = "Page size")
             @RequestParam(defaultValue = "20") int size,
 
+            @Parameter(description = "Sort field and direction (e.g., 'createdAt,desc')")
             @RequestParam(defaultValue = "createdAt,desc") String sort
     ) {
         log.debug("GET /api/v1/accounts - page: {}, size: {}, sort: {}", page, size, sort);
@@ -47,7 +63,13 @@ public class AccountController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get account by ID", description = "Retrieve detailed information about a specific account")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Account found"),
+            @ApiResponse(responseCode = "404", description = "Account not found")
+    })
     public ResponseEntity<AccountDetailResponse> getAccountById(
+            @Parameter(description = "Account UUID")
             @PathVariable UUID id
     ) {
         log.debug("GET /api/v1/accounts/{}", id);
@@ -57,6 +79,15 @@ public class AccountController {
     }
 
     @PostMapping
+    @Operation(summary = "Create a new account", description = "Create a new bank account with initial balance")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Account created successfully",
+                    content = @Content(schema = @Schema(implementation = AccountResponse.class))
+            ),
+            @ApiResponse(responseCode = "400", description = "Invalid request body")
+    })
     public ResponseEntity<AccountResponse> createAccount(
             @Valid @RequestBody CreateAccountRequest request
     ) {
@@ -69,7 +100,14 @@ public class AccountController {
     }
 
     @PatchMapping("/{id}/status")
+    @Operation(summary = "Update account status", description = "Change the status of an account (ACTIVE, SUSPENDED, CLOSED)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Account status updated"),
+            @ApiResponse(responseCode = "404", description = "Account not found"),
+            @ApiResponse(responseCode = "400", description = "Invalid status")
+    })
     public ResponseEntity<AccountResponse> updateAccountStatus(
+            @Parameter(description = "Account UUID")
             @PathVariable UUID id,
 
             @Valid @RequestBody UpdateAccountStatusRequest request
@@ -81,7 +119,13 @@ public class AccountController {
     }
 
     @GetMapping("/{id}/transactions")
+    @Operation(summary = "Get account transactions", description = "Retrieve all transactions for a specific account")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Transactions retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Account not found")
+    })
     public ResponseEntity<PageResponse<TransactionResponse>> getAccountTransactions(
+            @Parameter(description = "Account UUID")
             @PathVariable UUID id,
 
             @RequestParam(defaultValue = "0") int page,
