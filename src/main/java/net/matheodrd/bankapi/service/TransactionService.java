@@ -89,6 +89,18 @@ public class TransactionService {
                 .map(transactionMapper::toResponse);
     }
 
+    public Page<TransactionResponse> findByFilters(
+            UUID accountId,
+            TransactionStatus status,
+            TransactionType type,
+            LocalDateTime fromDate,
+            LocalDateTime toDate,
+            Pageable pageable
+    ) {
+        return transactionRepository.findByFilters(accountId, status, type, fromDate, toDate, pageable)
+                .map(transactionMapper::toResponse);
+    }
+
     public TransactionResponse findById(UUID id) {
         return transactionRepository.findById(id)
                 .map(transactionMapper::toResponse)
