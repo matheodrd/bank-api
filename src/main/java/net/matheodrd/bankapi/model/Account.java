@@ -38,9 +38,9 @@ public class Account {
     @Column(name = "status")
     private AccountStatus status;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false, insertable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", insertable = false)
     private LocalDateTime updatedAt;
 }

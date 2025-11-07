@@ -51,6 +51,6 @@ public class Transaction {
     @Column(name = "risk_score")
     private Integer riskScore;
 
-    @Column(name = "timestamp")
+    @Column(name = "timestamp", insertable = false)
     private LocalDateTime timestamp;
 }
